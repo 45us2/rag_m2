@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[oc]
+build/
+dist/
+*.egg-info
+.ruff_cache/
+.pytest_cache/
+
+# envs / secrets
+.venv
+.env
+
+# data (the parsed markdown data/processed/core_rules.md IS tracked)
+data/raw/*.pdf
+data/vectors.db
+data/eval_checkpoints/
+*.zip
+*.log
