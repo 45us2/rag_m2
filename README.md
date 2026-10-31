@@ -1,5 +1,7 @@
 # Warhammer 40,000 RAG assistant
 
+**Enzo Dos Reis** · M2 Computational Linguistics, Université Paris Cité · *Broadening in Data Science and NLP 1: RAG* · 2026–2027
+
 Multi-turn chatbot answering Warhammer 40,000 questions from two channels:
 
 - **Text**: the *Core Rules* PDF, parsed with Docling (`data/processed/core_rules.md`, tracked in the repo), chunked and indexed in SQLite (dense vectors + FTS5/BM25, fused with RRF).
