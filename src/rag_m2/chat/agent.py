@@ -18,13 +18,15 @@ log = logging.getLogger(__name__)
 ROUTER = """You route questions for a Warhammer 40,000 assistant with two sources:
 - "rules": the Core Rules book (game phases, movement, shooting, charges, fights, morale, terrain, core abilities, keywords, missions...).
 - "sql": a database of army data (factions, units/datasheets, model stats like toughness/wounds/save, weapons profiles, points costs, stratagems, detachments, enhancements, unit abilities, keywords).
-- "both" if both are needed, "none" for greetings/off-topic.
+- "both" if the question is about a specific unit/faction AND asks how a rule or core ability works (e.g. "does X have Lone Operative and what does it do?").
+- "none" for greetings/off-topic.
 Rewrite the last user message as a standalone question using the conversation (resolve pronouns like "it", "this unit").
+Keep it short and close to the user's words: do NOT add "Warhammer 40,000", "core rules" or other generic words (they hurt the search).
 Return JSON: {"route": "rules|sql|both|none", "query": "<standalone question>"}"""
 
 ANSWER = """You are a Warhammer 40,000 rules assistant.
 Answer the question using ONLY the context below. If the context does not contain the answer, say you don't know.
-Be concise and precise (keep exact numbers, distances, dice). Cite sources at the end, e.g. (Core Rules: <section>) or (Game database)."""
+Be concise and precise (keep exact numbers, distances, dice). Database rows are the facts about units; if a unit's list of abilities/weapons does not contain something, it does not have it. Cite sources at the end, e.g. (Core Rules: <section>) or (Game database)."""
 
 
 class State(TypedDict, total=False):

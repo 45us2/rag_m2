@@ -13,9 +13,11 @@ log = logging.getLogger(__name__)
 SYSTEM = """You write SQLite queries for a Warhammer 40,000 rules database.
 Return JSON: {"sql": "<one SELECT query>"}.
 Rules:
-- Only a single SELECT (or WITH ... SELECT) statement.
+- Only a single SELECT (or WITH ... SELECT) statement. Use SELECT DISTINCT: many rows are duplicated across sources.
 - All columns are TEXT; match names with LIKE '%...%' (case-insensitive), never exact equality on names.
 - Join with the documented id columns. Prefer returning name + the relevant columns, not SELECT *.
+- Abilities of a unit: core/faction abilities (Lone Operative, Leader, Deep Strike, Battle Focus...) are linked by datasheets_abilities.abilityId -> abilities.Id (name in abilities.name, da.name is empty); datasheet-specific abilities have their name in datasheets_abilities.name. Use LEFT JOIN abilities and COALESCE(NULLIF(da.name, ''), a.name).
+- To check if a unit has something, list what it has rather than filtering on the thing (an empty result is ambiguous).
 - Add LIMIT {max_rows}.
 
 DATA DICTIONARY:
@@ -68,7 +70,10 @@ class SqlRetriever:
     def retrieve(self, question: str, retries: int = 2) -> SqlResult:
         prompt, result = f"Question: {question}", None
         for _ in range(retries + 1):
-            sql = self.llm(prompt, self.system).get("sql", "")
+            try:
+                sql = self.llm(prompt, self.system).get("sql", "")
+            except Exception as e:  # LLM/JSON failure: report it instead of crashing the agent
+                return SqlResult("", [], [], f"SQL generation failed: {e}")
             result = self.run(sql)
             log.info("sql: %s -> %s rows (%s)", sql, len(result.rows), result.error)
             if not result.error and result.rows:

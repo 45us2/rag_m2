@@ -62,6 +62,12 @@ def generate(prompt: str, system: str | None = None, as_json: bool = False, retr
     return ""
 
 
-def generate_json(prompt: str, system: str | None = None) -> dict:
-    text = generate(prompt, system, as_json=True).strip().removeprefix("```json").strip("`\n ")
-    return json.loads(text)
+def generate_json(prompt: str, system: str | None = None, retries: int = 2) -> dict:
+    """JSON completion; retries when Gemini returns empty or invalid JSON."""
+    for attempt in range(retries + 1):
+        text = generate(prompt, system, as_json=True).strip().removeprefix("```json").strip("`\n ")
+        try:
+            return json.loads(text)
+        except json.JSONDecodeError:
+            log.warning("invalid JSON from Gemini (attempt %s): %r", attempt + 1, text[:200])
+    raise ValueError("Gemini did not return valid JSON")

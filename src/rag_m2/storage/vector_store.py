@@ -10,7 +10,7 @@ import numpy as np
 from rag_m2.chunker.markdown_chunker import Chunk
 
 STOPWORDS = set(
-    "a an and are as at be by can do does for from how i if in is it of on or that the this to what when which who with you your".split()
+    "a an and are as at be by can do does for from how i if in is it of on or that the this to what when which who with you your warhammer 40 000 40k core rules rule".split()
 )
 
 

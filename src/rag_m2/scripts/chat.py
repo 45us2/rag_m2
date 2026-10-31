@@ -1,7 +1,8 @@
-"""Multi-turn chat in the terminal (rich + prompt_toolkit)."""
+"""Multi-turn chat in the terminal (rich + prompt_toolkit). Every session is appended to data/chat_logs/chat.md."""
 
 import logging
 import uuid
+from datetime import datetime
 
 from langchain_core.messages import HumanMessage
 from prompt_toolkit import PromptSession
@@ -13,7 +14,7 @@ from rag_m2.chat.agent import build_agent
 from rag_m2.llm.gemini import generate, generate_json
 from rag_m2.retriever.embedder import Embedder
 from rag_m2.retriever.sql_retriever import SqlRetriever
-from rag_m2.settings import settings
+from rag_m2.settings import DATA, settings
 from rag_m2.storage.vector_store import SqliteStore
 
 HELP = "/reset new conversation · /trace toggle routing/sources · /exit quit"
@@ -25,7 +26,11 @@ if __name__ == "__main__":
         agent = build_agent(
             generate, generate_json, Embedder(), SqliteStore(settings.vector_db), SqlRetriever(generate_json), settings.top_k
         )
-    console.print(f"[bold]Warhammer 40k RAG[/bold] ({settings.llm_model}) — {HELP}")
+    log_path = DATA / "chat_logs" / "chat.md"
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    log = log_path.open("a", encoding="utf-8")
+    log.write(f"# Chat {datetime.now():%Y-%m-%d %H:%M} ({settings.llm_model})\n\n")
+    console.print(f"[bold]Warhammer 40k RAG[/bold] ({settings.llm_model}) — {HELP}\n[dim]log: {log_path}[/dim]")
     session, thread, trace = PromptSession(), str(uuid.uuid4()), True
 
     while True:
@@ -41,6 +46,7 @@ if __name__ == "__main__":
             break
         if q == "/reset":
             thread = str(uuid.uuid4())
+            log.write("---\n\n*(new conversation)*\n\n")
             console.print("[dim]history cleared[/dim]")
             continue
         if q == "/trace":
@@ -54,11 +60,20 @@ if __name__ == "__main__":
             continue
         except Exception as e:
             console.print(f"[red]Error: {e}[/red]")
+            log.write(f"## {q}\n\n**Error:** {e}\n\n")
             continue
+        answer = state["messages"][-1].content
+        sources = "; ".join(dict.fromkeys(state.get("sources", [])))
+        sql = state["sql"].splitlines()[0] if state.get("sql") else ""
         if trace:
             console.print(f"[dim]route={state['route']} · query={state['query']}[/dim]")
-            if state.get("sql"):
-                console.print(f"[dim]{state['sql'].splitlines()[0]}[/dim]")
-        console.print(Markdown(state["messages"][-1].content))
-        if trace and state.get("sources"):
-            console.print(f"[dim]sources: {'; '.join(dict.fromkeys(state['sources']))}[/dim]")
+            if sql:
+                console.print(f"[dim]{sql}[/dim]")
+        console.print(Markdown(answer))
+        if trace and sources:
+            console.print(f"[dim]sources: {sources}[/dim]")
+        log.write(f"## {q}\n\n*route: {state['route']} · query: {state['query']}*\n\n")
+        log.write(f"`{sql}`\n\n" if sql else "")
+        log.write(f"{answer}\n\n*sources: {sources or '-'}*\n\n")
+        log.flush()
+    log.close()

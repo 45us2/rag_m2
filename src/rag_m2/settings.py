@@ -27,7 +27,7 @@ class Settings(BaseSettings):
     chunk_min_size: int = 300
     top_k: int = 5
     sql_max_rows: int = 30
-    sql_max_cell_length: int = 400
+    sql_max_cell_length: int = 2000
 
 
 settings = Settings()
