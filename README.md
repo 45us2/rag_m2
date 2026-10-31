@@ -12,6 +12,8 @@ question + history ─> router (LLM) ──┬─> hybrid search (Core Rules chu
 
 The agent is a LangGraph graph (`src/rag_m2/chat/agent.py`) with a `MemorySaver` checkpointer: each conversation is a `thread_id`, so follow-up questions ("and what is its toughness?") are resolved by the router.
 
+Design choices, evaluation details and limitations: see [docs/architecture.md](docs/architecture.md).
+
 ## Setup
 
 ```bash
@@ -51,8 +53,8 @@ Chat commands: `/reset` (new conversation), `/trace` (show route, SQL and source
 
 | Questions | Faithfulness | Factual correctness | Context precision | Context recall | Context hit |
 |---|---:|---:|---:|---:|---:|
-| Single-hop (4) | 1.00 | 0.86 | 0.88 | 1.00 | 0.50 |
-| Multi-hop (8) | 0.94 | 0.45 | 0.18 | 0.68 | 0.52 |
+| Single-hop (4) | 1.00 | 0.97 | 0.87 | 1.00 | 0.50 |
+| Multi-hop (8) | 0.94 | 0.40 | 0.18 | 0.68 | 0.52 |
 | **All (12)** | **0.96** | **0.59** | **0.41** | **0.78** | **0.51** |
 
 - **The agent does not hallucinate** (faithfulness 0.96): answers stick to the retrieved chunks, and it says "I don't know" when the context is missing.
