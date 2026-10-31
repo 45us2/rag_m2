@@ -1,8 +1,7 @@
-from pathlib import Path
 import warnings
+from pathlib import Path
 
 from docling.document_converter import DocumentConverter
-
 
 warnings.filterwarnings(
     "ignore",

@@ -2,7 +2,6 @@ from pathlib import Path
 
 from pypdf import PdfReader
 
-
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_INPUT_PATH = PROJECT_ROOT / "data" / "raw" / "Core Rules.pdf"
 DEFAULT_OUTPUT_PATH = PROJECT_ROOT / "data" / "processed" / "core_rules_pypdf.md"
