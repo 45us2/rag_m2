@@ -45,6 +45,20 @@ Chat commands: `/reset` (new conversation), `/trace` (show route, SQL and source
 - `generate_testset` samples sections of the rules book and lets RAGAS generate single-hop / multi-hop questions → `data/eval/testset.jsonl` (review it by hand).
 - `eval_retrieval` runs the agent on each question (answers are checkpointed in `data/eval_checkpoints/` so a crash/rate limit does not lose work), then computes RAGAS `Faithfulness`, `FactualCorrectness`, `LLMContextPrecisionWithReference`, `LLMContextRecall`, plus a cheap LLM-free `context_hit` (fuzzy match of reference contexts in retrieved chunks) → `data/eval/results.csv`.
 - RAGAS uses the project's own rate-limited Gemini client and embedder through adapters (`src/rag_m2/evaluations/ragas_adapters.py`).
+- `smoke_test` runs a fixed list of conversations (rules, SQL, mixed, multi-turn, small talk) and checks the routing → `data/chat_logs/smoke_test.md` (13/13 routes correct).
+
+### Results (rules channel, `gemini-3.5-flash-lite`, 12 RAGAS questions, top-k = 5)
+
+| Questions | Faithfulness | Factual correctness | Context precision | Context recall | Context hit |
+|---|---:|---:|---:|---:|---:|
+| Single-hop (4) | 1.00 | 0.86 | 0.88 | 1.00 | 0.50 |
+| Multi-hop (8) | 0.94 | 0.45 | 0.18 | 0.68 | 0.52 |
+| **All (12)** | **0.96** | **0.59** | **0.41** | **0.78** | **0.51** |
+
+- **The agent does not hallucinate** (faithfulness 0.96): answers stick to the retrieved chunks, and it says "I don't know" when the context is missing.
+- **Single-hop questions are almost perfect.** Scores drop on multi-hop questions, which combine two unrelated rules: with 5 chunks, retrieval often finds only one side and adds off-topic chunks (low context precision).
+- Part of the drop comes from the synthetic test set: one multi-hop question is incoherent (the agent correctly answered "I don't know", scored 0), and three are near-duplicates.
+- `context_hit` (fuzzy string match) is stricter than RAGAS's LLM-judged recall.
 
 ## Layout
 
