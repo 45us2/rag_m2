@@ -1,0 +1,90 @@
+user_input,faithfulness,factual_correctness(mode=f1),llm_context_precision_with_reference,context_recall,context_hit,route,response
+Hey what rules say about Aircraft in charge and fight phase?,1.0,0.94,,1.0,1.0,rules,"Regarding Aircraft in the charge and fight phases:
+* Aircraft units cannot declare a charge (or charge).
+* Only units that can *Fly* can select an Aircraft unit as a target of their charge, charge at Aircraft, or make melee attacks against Aircraft units.
+* Units that can *Fly* can end their Charge move within Engagement Range of one or more enemy Aircraft units.
+* An Aircraft model is only eligible to fight if it is within Engagement Range of one or more enemy units that can *Fly*, and it can only make melee attacks against units that can *Fly*. 
+* Aircraft cannot Pile In or Consolidate. 
+* When a model Piles In or Consolidates, unless that model can *Fly*, Aircraft models are ignored for the purposes of moving closer to the closest enemy model.
+
+(Core Rules: Aircraft in the Charge and Fight Phases)"
+"Hey, what happen to my guys when they jump out of a wrecked transport regarding being Battle-shocked?",0.5,1.0,,1.0,1.0,rules,"When units disembark from a destroyed (wrecked) Transport model, until the start of its controlling player's next Command phase, that unit is Battle-shocked.
+
+(Core Rules: Destroyed Transports)"
+What are the specific army building restrictions and limitations regarding the inclusion and enhancement of Epic Heroes?,1.0,1.0,,1.0,1.0,rules,"Based on the provided rules, the army building restrictions and limitations regarding Epic Heroes are:
+
+* Epic Heroes cannot be given any Enhancements.
+* Your army cannot include the same Epic Hero more than once.
+
+(Core Rules: Select Detachment Rules | Select Units | Select Warlord)"
+"How do you actually win a game of Warhammer 40,000?",1.0,1.0,0.49999999995,1.0,0.0,rules,"Games of Warhammer 40,000 are won by scoring more Victory points than your opponent through achieving various objectives, from recovering vital relics to capturing enemy strongholds or eliminating the opposing Warlord (Core Rules: Core Rules | Introduction)."
+"In Warhammer 40,000, how is a saving throw resolved if an attack is allocated during the fight phase?",1.0,0.55,0.5833333333041666,1.0,0.3333333333333333,rules,"To make a saving throw, roll one D6, then modify the result by the Armour Penetration (AP) characteristic of the attack. If the result is greater than or equal to the model's Save characteristic, the saving throw is successful and the attack sequence ends. Otherwise, the saving throw fails and that model suffers damage. 
+
+Note that:
+* An unmodified saving throw of 1 always fails.
+* A saving throw can never be improved by more than +1.
+* If the model has an invulnerable save, the controlling player can choose to use that instead of the model's normal Save characteristic. Invulnerable saving throws are never modified by an attack's Armour Penetration characteristic.
+* Do not make a saving throw against a mortal wound.
+
+(Core Rules: 4. SAVING THROW, INVULNERABLE SAVES, MORTAL WOUNDS)"
+"durin the movemnt phase, what happens if a unit is not within enggement range, and how does the player resolve a subsequent saving throw?",1.0,0.8,0.0,1.0,1.0,rules,"During the Movement phase, if a unit is not within Engagement Range of any enemy models, it can make a Normal move, or Advance, or Remain Stationary (Core Rules: Movement Phase | 1. Move Units). 
+
+To resolve a saving throw:
+1. Roll one D6.
+2. Modify the result by the Armour Penetration (AP) characteristic of the attack (for example, if the attack has an AP of -1, 1 is subtracted from the saving throw).
+3. If the result is greater than or equal to the Save characteristic of the model the attack was allocated to, the saving throw is successful and the attack sequence ends. Otherwise, the saving throw fails and the model suffers damage.
+4. An unmodified saving throw of 1 always fails, and a saving throw can never be improved by more than +1.
+
+(Core Rules: 4. Saving Throw)"
+"Can u plz tell me how to properly note things down on my Army Roster when building a force for Warhammer 40,000, specifically regarding detachment rules, unit details, and selecting a warlord?",1.0,0.75,0.5833333333041666,1.0,0.5,rules,"When building your force, you must note the following on your Army Roster:
+
+* **Detachment Rules:** Note one set of Detachment rules for your army. (Core Rules: SELECT DETACHMENT RULES | SELECT UNITS | SELECT WARLORD)
+* **Unit Details:** Note the number of models in the unit, any weapons, wargear, upgrades, any Enhancement it has, and its points value. (Core Rules: SELECT DETACHMENT RULES | SELECT UNITS | SELECT WARLORD)
+* **Warlord:** Select one Character model from your army to be your Warlord and make a note of this on your Army Roster. (Core Rules: SELECT DETACHMENT RULES | SELECT UNITS | SELECT WARLORD)"
+"When building an Army Roster with a Dedicated Transport that starts the battle without any embarked units, it counts as destroyed, forcing any embarked units to disembark; how are mortal wounds and the subsequent saving throw determined for models suffering damage from rolls of 1 during this disembarkation?",1.0,0.33,0.0,0.4,0.3333333333333333,rules,"When models disembark from a destroyed Transport and you roll D6 for each disemabarking model, the unit suffers 1 mortal wound for each roll of 1. 
+
+For mortal wounds, **no saving throws (including invulnerable saving throws) can be made**. Each mortal wound inflicts one point of damage on the target unit, they are always applied one at a time, and excess damage is not lost if it can be allocated to another model in the unit until all damage is allocated or the unit is destroyed.
+
+(Core Rules: Destroyed Transports, Mortal Wounds)"
+"when model have Vehicle type, how they follow movement over friendly models and what exception happen with pistol weapon use rules?",1.0,0.67,0.0,1.0,0.5,rules,"Based on the provided rules:
+
+**Moving Vehicle models over friendly models:**
+* Vehicle models can be moved over friendly models as if they were not there, but they cannot end their move on top of another model. 
+* *Exception:* Vehicle models cannot be moved over other friendly Monster or Vehicle models, and must be moved around them instead. 
+*(Core Rules: Movement Phase | 1. Move Units)*
+
+**Exceptions for using Pistol weapons:**
+* If a model is equipped with one or more Pistols, unless it is a Monster or Vehicle model, it can either shoot with its Pistols or with all of its other ranged weapons (it cannot shoot with a Pistol alongside any other non-Pistol weapon, with the exception of Monsters and Vehicles). 
+*(Core Rules: Pistol)*"
+How are Vehicle models treated differently from other models regarding both shooting restrictions with pistols and movement restrictions over friendly units?,1.0,1.0,0.0,1.0,0.5,rules,"Based on the provided rules, Vehicle models are treated differently in the following ways:
+
+* **Shooting with Pistols:** If a model is equipped with one or more Pistols, unless it is a Monster or Vehicle model, it can *either* shoot with its Pistols *or* with all of its other ranged weapons. (Monster and Vehicle models are exceptions to this restriction when combining weapons). (Core Rules: PISTOL)
+* **Movement over friendly units:** While models can generally be moved over friendly models as if they were not there, Monster and Vehicle models cannot be moved over other friendly Monster or Vehicle models and must be moved around them instead. (Core Rules: MOVEMENT PHASE | 1. MOVE UNITS)
+
+(Core Rules: PISTOL; Core Rules: MOVEMENT PHASE | 1. MOVE UNITS)"
+How do the rules for a Vehicle differ from standard models regarding shooting with pistols and movement restrictions over friendly models?,1.0,0.5,0.0,1.0,0.5,rules,"Based on the provided rules, here is how a Vehicle differs from standard (non-Monster/non-Vehicle) models:
+
+**Shooting with Pistols:**
+* **Standard models:** If a model is equipped with one or more Pistols, unless it is a Monster or Vehicle model, it can *either* shoot with its Pistols *or* with all of its other ranged weapons (declared before selecting targets). 
+* **Vehicles:** While the context does not explicitly detail a Vehicle's restriction when combining Pistols with other weapons, it notes that unlike standard models, Monster and Vehicle models do not have the restriction preventing them from shooting other ranged weapons alongside Pistols in the same activation (Core Rules: PISTOL). Furthermore, Vehicles can shoot while within Engagement Range of enemy units using the Big Guns Never Tire rules (Core Rules: Big Guns Never Tire).
+
+**Movement Restrictions Over Friendly Models:**
+* **Standard models:** When moving, a model can be moved over friendly models as if they were not there if you wish (Core Rules: Movement Phase | 1. Move Units).
+* **Vehicles:** A Vehicle model cannot be moved over other friendly Monster or Vehicle models; such models must be moved around them instead (Core Rules: Movement Phase | 1. Move Units).
+
+Sources: 
+- (Core Rules: PISTOL)
+- (Core Rules: BIG GUNS NEVER TIRE)
+- (Core Rules: MOVEMENT PHASE | 1. MOVE UNITS)"
+How do the movement restrictions regarding friendly units and the shooting weapon exceptions differ for a Vehicle model compared to other models?,1.0,0.29,0.0,1.0,0.5,rules,"Based on the provided context, the differences for a Vehicle model are:
+
+* **Movement restrictions regarding friendly models:** While normally models can be moved over friendly models as if they were not there, Monster and Vehicle models **cannot** be moved over other friendly Monster or Vehicle models and must be moved around them instead (Core Rules: Movement Phase | 1. Move Units).
+* **Shooting weapon exceptions (while in Engagement Range):** 
+  * Unlike standard units that cannot shoot while within Engagement Range, Monster and Vehicle units are eligible to shoot in their controlling player's Shooting phase even while within Engagement Range of enemy units, and can target those enemy units with their ranged weapons (Core Rules: Big Guns Never Tire). 
+  * When a Monster or Vehicle model makes a ranged attack while within Engagement Range of an enemy unit, unless the attack is made with a **Pistol**, 1 is subtracted from that attack's Hit roll (Core Rules: Big Guns Never Tire). 
+  * Furthermore, if a model is equipped with one or more Pistols, standard models must choose to shoot *either* with their Pistols or with all of their other ranged weapons, whereas Monster and Vehicle models are exceptions to this restriction (implied by: ""If a model is equipped with one or more Pistols, unless it is a Monster or Vehicle model, it can either shoot with its Pistols or with all of its other ranged weapons"" (Core Rules: Pistol)).
+
+Sources:
+- (Core Rules: Movement Phase | 1. Move Units)
+- (Core Rules: Big Guns Never Tire)
+- (Core Rules: Pistol)"

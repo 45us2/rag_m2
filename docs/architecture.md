@@ -105,7 +105,7 @@ The smoke test drove most of the fixes listed above:
 
 ## 9. Limitations and future work
 
-- **Multi-hop questions** are the weak point: with 5 chunks, retrieval often covers only one of the two rules involved (see README results). Options: higher k, a cross-encoder reranker, or one search per sub-question.
+- **Multi-hop questions** were the weak point: with 5 chunks, retrieval often covered only one of the two rules involved. Raising k to 8 brought context recall from 0.78 to 0.95 (see README results), but precision stays low. Next options: a cross-encoder reranker, or one search per sub-question.
 - **The SQL channel is not evaluated by RAGAS** (the test set comes from the rules book only); a small hand-written set of SQL questions with expected answers would be needed.
 - **Memory is in RAM**: the conversation is lost when the chat closes (a `SqliteSaver` checkpointer would persist it).
 - **Free tier**: the rate limit makes the evaluation slow (about 30 to 60 minutes) and limits the size of the test set.

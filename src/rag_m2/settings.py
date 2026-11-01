@@ -25,7 +25,7 @@ class Settings(BaseSettings):
     chunk_size: int = 1000
     chunk_overlap: int = 150
     chunk_min_size: int = 300
-    top_k: int = 5
+    top_k: int = 8  # k=8 vs k=5: context recall 0.78 -> 0.95 (see README)
     sql_max_rows: int = 30
     sql_max_cell_length: int = 2000
 
