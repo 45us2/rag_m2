@@ -1,0 +1,15 @@
+{"question": "What are the Save and Wounds characteristics of a Hellblaster Squad?", "expected": ["3+", "2"]}
+{"question": "How many points does a Hive Tyrant cost?", "expected": ["195"]}
+{"question": "What is the invulnerable save of Custodian Guard?", "expected": ["4"]}
+{"question": "What are the Toughness and Wounds of Eldrad Ulthran?", "expected": ["4", "5"]}
+{"question": "How many CP does Armour of Contempt cost and in which phases can it be used?", "expected": ["1", "Shooting", "Fight"]}
+{"question": "Which units can Eldrad Ulthran lead?", "expected": ["Guardian Defenders", "Storm Guardians"]}
+{"question": "How many detachments do the Necrons have?", "expected": ["16"]}
+{"question": "What are the range and AP of the gauss reaper carried by Necron Warriors?", "expected": ["12", "-1"]}
+{"question": "What abilities does a Lictor have?", "expected": ["Lone Operative", "Stealth", "Infiltrators", "Fights First"]}
+{"question": "What is the Objective Control of Termagants?", "expected": ["2"]}
+{"question": "What are the Strength, AP and Damage of the Land Raider's godhammer lascannon?", "expected": ["12", "-3", "D6+1"]}
+{"question": "How many points does the Artificer Armour enhancement cost?", "expected": ["20"]}
+{"question": "What is the Toughness of a Hive Tyrant?", "expected": ["10"]}
+{"question": "How many CP does Rapid Ingress cost and in which phase is it used?", "expected": ["1", "Movement"]}
+{"question": "How many points does an Intercessor Squad cost?", "expected": ["80", "150"]}

@@ -17,3 +17,6 @@ data/vectors.db
 data/eval_checkpoints/
 *.zip
 *.log
+
+# files downloaded from the Claude app
+Claude outputs/

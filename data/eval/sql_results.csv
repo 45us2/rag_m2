@@ -1,0 +1,40 @@
+question,expected,route_ok,sql_ok,answer_ok,route,sql,answer
+What are the Save and Wounds characteristics of a Hellblaster Squad?,3+ | 2,True,True,True,sql,"Query: SELECT DISTINCT d.name AS datasheet_name, dm.name AS model_name, dm.sv, dm.w FROM datasheets d JOIN datasheets_models dm ON dm.DatasheetId = d.Id WHERE d.name LIKE '%Hellblaster Squad%' LIMIT 30","Based on the database, a Hellblaster Squad has a Save (sv) of 3+ and 2 Wounds (w).
+
+(Game database)"
+How many points does a Hive Tyrant cost?,195,True,True,True,sql,"Query: SELECT DISTINCT d.name AS datasheet_name, dmc.description, dmc.cost FROM datasheets d JOIN datasheets_models_cost dmc ON dmc.DatasheetId = d.Id WHERE d.name LIKE '%Hive Tyrant%' LIMIT 30",A Hive Tyrant (1 model) costs 195 points (Game database).
+What is the invulnerable save of Custodian Guard?,4,True,True,True,sql,"Query: SELECT DISTINCT d.name AS datasheet_name,",The invulnerable save of a Custodian Guard is 4 (Game database).
+What are the Toughness and Wounds of Eldrad Ulthran?,4 | 5,True,True,True,sql,"Query: SELECT DISTINCT d.name AS datasheet_name, dm.name AS model_name, dm.t AS toughness, dm.w AS wounds FROM datasheets d JOIN datasheets_models dm ON dm.DatasheetId = d.Id WHERE d.name LIKE '%Eldrad Ulthran%' LIMIT 30",Eldrad Ulthran has a Toughness of 4 and 5 Wounds (Game database).
+How many CP does Armour of Contempt cost and in which phases can it be used?,1 | Shooting | Fight,True,True,True,sql,"Query: SELECT DISTINCT s.name, s.cpCost, s.phase, s.turn, s.type, s.description FROM stratagems s WHERE s.name LIKE '%Armour of Contempt%' LIMIT 30",Armour of Contempt costs **1 CP** and can be used in either your opponent's **Shooting phase** or the **Fight phase** (Game database).
+Which units can Eldrad Ulthran lead?,Guardian Defenders | Storm Guardians,True,True,True,sql,"Query: SELECT DISTINCT d.name AS leader_name, attached.name AS attached_unit_name FROM datasheets d JOIN datasheets_leader dl ON dl.LeaderId = d.Id JOIN datasheets attached ON attached.Id = dl.attachedId WHERE d.name LIKE '%Eldrad Ulthran%' LIMIT 30","Based on the database, Eldrad Ulthran can lead the following units:
+* Guardian Defenders
+* Storm Guardians
+
+(Game database)"
+How many detachments do the Necrons have?,16,True,True,True,sql,"Query: SELECT DISTINCT f.name AS faction_name, COUNT(dt.Id) AS detachment_count",The Necrons have 16 detachments (Game database).
+What are the range and AP of the gauss reaper carried by Necron Warriors?,12 | -1,True,True,True,sql,"Query: SELECT DISTINCT d.name AS datasheet_name, dw.name AS weapon_name, dw.range, dw.ap FROM datasheets d JOIN datasheets_wargear dw ON dw.DatasheetId = d.Id WHERE d.name LIKE '%Necron Warriors%' AND dw.name LIKE '%gauss reaper%' LIMIT 30",The range of the gauss reaper carried by Necron Warriors is 12 and the AP is -1 (Game database).
+What abilities does a Lictor have?,Lone Operative | Stealth | Infiltrators | Fights First,True,True,True,sql,"Query: SELECT DISTINCT d.name AS datasheet_name, COALESCE(NULLIF(da.name, ''), a.name) AS ability_name, COALESCE(da.description, a.description) AS ability_description FROM datasheets d JOIN datasheets_abilities da ON da.DatasheetId = d.Id LEFT JOIN abilities a ON a.Id = da.abilityId WHERE d.name LIKE '%Lictor%' LIMIT 30","Based on the database, a Lictor has the following abilities:
+- Feeder Tendrils
+- Pheromone Trail
+- Synapse
+- Lone Operative
+- Stealth
+- Fights First
+- Infiltrators
+
+(Game database)"
+What is the Objective Control of Termagants?,2,True,True,True,sql,"Query: SELECT DISTINCT d.name AS datasheet_name, dm.name AS model_name, dm.oc FROM datasheets d JOIN datasheets_models dm ON dm.DatasheetId = d.Id WHERE d.name LIKE '%Termagants%' LIMIT 30",The Objective Control (OC) of Termagants is 2 (Game database).
+"What are the Strength, AP and Damage of the Land Raider's godhammer lascannon?",12 | -3 | D6+1,True,True,True,sql,"Query: SELECT DISTINCT d.name AS datasheet_name, dw.name AS weapon_name, dw.range, dw.type, dw.a, dw.bsWs, dw.s, dw.ap, dw.d FROM datasheets d JOIN datasheets_wargear dw ON dw.DatasheetId = d.Id WHERE d.name LIKE '%Land Raider%' AND dw.name LIKE '%godhammer lascannon%' LIMIT 30","Based on the database, the Land Raider's Godhammer lascannon has the following profile:
+* **Strength (S):** 12
+* **AP:** -3
+* **Damage (D):** D6+1
+
+(Game database)"
+How many points does the Artificer Armour enhancement cost?,20,True,True,True,sql,Query: SELECT DISTINCT,The Artificer Armour enhancement costs 20 points (Game database).
+What is the Toughness of a Hive Tyrant?,10,True,True,True,sql,"Query: SELECT DISTINCT d.name AS datasheet_name, dm.name AS model_name, dm.t AS toughness, dm.w AS wounds, dm.sv AS save FROM datasheets d JOIN datasheets_models dm ON dm.DatasheetId = d.Id WHERE d.name LIKE '%Hive Tyrant%' LIMIT 30",The Toughness of a Hive Tyrant is 10 (Game database).
+How many CP does Rapid Ingress cost and in which phase is it used?,1 | Movement,False,False,True,rules,,Rapid Ingress costs 1CP and is used at the end of your opponent's Movement phase (Core Rules: Rapid Ingress).
+How many points does an Intercessor Squad cost?,80 | 150,True,True,True,sql,"Query: SELECT DISTINCT d.name AS datasheet_name, dmc.description, dmc.cost FROM datasheets d JOIN datasheets_models_cost dmc ON dmc.DatasheetId = d.Id WHERE d.name LIKE '%Intercessor Squad%' LIMIT 30","Based on the database, an Intercessor Squad costs:
+- 80 points for 5 models
+- 150 points for 10 models
+
+(Game database)"

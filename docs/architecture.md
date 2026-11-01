@@ -82,15 +82,23 @@ The agent is a **LangGraph** graph: `router → (rules | sql | both | none) → 
 - Gemini through `google-genai`, model set in `.env` (`LLM_MODEL`), API key never committed.
 - **Rate limiter** (thread-safe, 10 requests/min by default) for the free tier.
 - **Retries** with backoff on 429/500/503 errors.
-- **JSON retries**: `flash-lite` sometimes returns empty or truncated JSON (especially for multi-line SQL), so the call is repeated up to 2 times; if it still fails, the SQL channel returns an error message instead of crashing the conversation.
+- **Tolerant JSON parsing**: `flash-lite` often answers with a ```` ```sql ```` code block instead of the requested `{"sql": ...}` JSON. The parser accepts it and extracts the query. If the output is empty or unusable, the call is repeated up to 2 times; if it still fails, the SQL channel returns an error message instead of crashing the conversation.
 
-## 8. Evaluation
+## 8. Interfaces and development workflow
 
-Three levels, from cheapest to most expensive:
+- **Terminal chat** (`scripts/chat.py`, rich + prompt_toolkit): the simplest way to talk to the agent; every session is saved to `data/chat_logs/chat.md`.
+- **Textual interface** (`scripts/tui.py`): chat on the left and a trace panel on the right (route, rewritten question, SQL query, sources), which makes the routing visible during a demo. The agent runs in a worker thread so the interface stays responsive while Gemini answers.
+- **Git hooks** (`.pre-commit-config.yaml`): ruff lint (with auto-fix) and ruff format run before every commit, so no unformatted code reaches the repo. Local hooks call `uv run ruff`, so they use the project's own ruff version.
+- **Makefile**: one short command per step (`make help`).
+
+## 9. Evaluation
+
+Four levels, from cheapest to most expensive:
 
 1. **Unit tests** (`tests/`, no API key): chunk merging, SQL safety, routing and memory with a fake LLM.
 2. **Smoke test** (`scripts/smoke_test.py`): 13 fixed questions (rules, SQL, mixed, a 3-turn conversation, small talk), checks the route and saves the answers for manual review. Final run: **13/13 routes**, all answers correct.
-3. **RAGAS** (`scripts/generate_testset.py`, `scripts/eval_retrieval.py`): synthetic questions generated from the rules book, then Faithfulness, Factual correctness, Context precision, Context recall, plus `context_hit`, a fuzzy match without LLM. Results and their interpretation are in the README.
+3. **SQL evaluation** (`scripts/eval_sql.py`): RAGAS generates questions from documents, so it cannot test the database. 15 questions were written by hand and their answers checked with SQL queries written by hand on `wahadb.sqlite`. A question counts as correct when all expected values (e.g. `12`, `-3`, `D6+1` for a weapon profile) appear in the answer. This is simple exact matching, so it can miss correct answers phrased differently, but it needs no LLM judge. Result: **15/15 correct answers** (14 through SQL, 1 core stratagem answered from the rules book).
+4. **RAGAS** (`scripts/generate_testset.py`, `scripts/eval_retrieval.py`): synthetic questions generated from the rules book, then Faithfulness, Factual correctness, Context precision, Context recall, plus `context_hit`, a fuzzy match without LLM. Results and their interpretation are in the README.
 
 The smoke test drove most of the fixes listed above:
 
@@ -101,12 +109,13 @@ The smoke test drove most of the fixes listed above:
 | "I don't know" for Eldrad's abilities | core abilities stored in another table | ability storage explained in the SQL prompt |
 | Mixed question routed to SQL only | unclear definition of `both` | routing examples in the router prompt |
 | Crash `Expecting value` | empty JSON from Gemini | JSON retries + SQL error isolated |
+| SQL dropped after 3 "invalid JSON" | Gemini sent a ```` ```sql ```` block instead of JSON | parser extracts the SQL from the block |
 | "I don't know" on charge after Advance | query rewriting added generic words | rewriting kept short + BM25 stopwords |
 
-## 9. Limitations and future work
+## 10. Limitations and future work
 
 - **Multi-hop questions** were the weak point: with 5 chunks, retrieval often covered only one of the two rules involved. Raising k to 8 brought context recall from 0.78 to 0.95 (see README results), but precision stays low. Next options: a cross-encoder reranker, or one search per sub-question.
-- **The SQL channel is not evaluated by RAGAS** (the test set comes from the rules book only); a small hand-written set of SQL questions with expected answers would be needed.
+- **The SQL evaluation is small** (15 hand-written questions, exact matching); a larger set, including multi-turn and mixed questions, would give more reliable numbers.
 - **Memory is in RAM**: the conversation is lost when the chat closes (a `SqliteSaver` checkpointer would persist it).
 - **Free tier**: the rate limit makes the evaluation slow (about 30 to 60 minutes) and limits the size of the test set.
 - **One LLM call decides everything**: a wrong route means a wrong answer; `both` could be used as a safer default for ambiguous questions.

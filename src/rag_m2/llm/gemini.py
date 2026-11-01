@@ -2,6 +2,7 @@
 
 import json
 import logging
+import re
 import threading
 import time
 
@@ -62,12 +63,22 @@ def generate(prompt: str, system: str | None = None, as_json: bool = False, retr
     return ""
 
 
+def parse_json(raw: str) -> dict | None:
+    """Parse the model output; accepts a ```sql block or bare SQL instead of JSON (frequent with flash-lite)."""
+    text = re.sub(r"^```\w*\s*|\s*```$", "", raw.strip()).strip()
+    try:
+        out = json.loads(text)
+        return out if isinstance(out, dict) else None
+    except json.JSONDecodeError:
+        sql = re.search(r"(?is)\b(select|with)\b.*", text)
+        return {"sql": sql.group(0).strip()} if sql else None
+
+
 def generate_json(prompt: str, system: str | None = None, retries: int = 2) -> dict:
     """JSON completion; retries when Gemini returns empty or invalid JSON."""
     for attempt in range(retries + 1):
-        text = generate(prompt, system, as_json=True).strip().removeprefix("```json").strip("`\n ")
-        try:
-            return json.loads(text)
-        except json.JSONDecodeError:
-            log.warning("invalid JSON from Gemini (attempt %s): %r", attempt + 1, text[:200])
+        raw = generate(prompt, system, as_json=True)
+        if (out := parse_json(raw)) is not None:
+            return out
+        log.warning("invalid JSON from Gemini (attempt %s): %r", attempt + 1, raw[:200])
     raise ValueError("Gemini did not return valid JSON")

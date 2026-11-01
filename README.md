@@ -20,6 +20,7 @@ Design choices, evaluation details and limitations: see [docs/architecture.md](d
 
 ```bash
 uv sync --all-groups
+uv run pre-commit install             # git hooks: ruff (lint + format) runs before every commit
 echo "GOOGLE_API_KEY=..." > .env      # Google AI Studio key, never committed
 ```
 
@@ -37,12 +38,18 @@ With `make` (`make help`) or directly with `uv run python -m ...`:
 | 2. Chunk + embed + store | `make index` | `uv run python -m rag_m2.scripts.index` |
 | Debug retrieval (no LLM) | `make search Q="..."` | `uv run python -m rag_m2.scripts.search "What is Lone Operative?"` |
 | Debug text-to-SQL | `make ask-sql Q="..."` | `uv run python -m rag_m2.scripts.ask_sql "Which Aeldari units have toughness 4?"` |
-| **Chat** | `make chat` | `uv run python -m rag_m2.scripts.chat` |
-| Generate RAGAS test set | `make gen-testset SIZE=15` | `uv run --group eval python -m rag_m2.scripts.generate_testset --size 15` |
-| Evaluate (RAGAS) | `make eval` | `uv run --group eval python -m rag_m2.scripts.eval_retrieval --no_sql` |
+| **Chat (terminal)** | `make chat` | `uv run python -m rag_m2.scripts.chat` |
+| **Chat (Textual interface)** | `make tui` | `uv run python -m rag_m2.scripts.tui` |
+| Smoke test (routing) | `make smoke` | `uv run python -m rag_m2.scripts.smoke_test` |
+| Generate RAGAS test set | `make gen-testset SIZE=10` | `uv run --group eval python -m rag_m2.scripts.generate_testset --size 10 --num_docs 10` |
+| Evaluate text channel (RAGAS) | `make eval` | `uv run --group eval python -m rag_m2.scripts.eval_retrieval --no_sql` |
+| Evaluate SQL channel | `make eval-sql` | `uv run python -m rag_m2.scripts.eval_sql` |
 | Tests (offline) | `make test` | `uv run pytest -q` |
+| Git hooks on all files | `make hooks` | `uv run pre-commit run --all-files` |
 
-Chat commands: `/reset` (new conversation), `/trace` (show route, SQL and sources), `/exit`.
+Terminal chat commands: `/reset` (new conversation), `/trace` (show route, SQL and sources), `/exit`. Every session is appended to `data/chat_logs/chat.md`.
+
+Textual interface: chat on the left, routing trace (route, rewritten query, SQL, sources) on the right. `Ctrl+N` new conversation, `Ctrl+T` show/hide the trace, `Ctrl+Q` quit.
 
 ## Evaluation
 
@@ -50,6 +57,15 @@ Chat commands: `/reset` (new conversation), `/trace` (show route, SQL and source
 - `eval_retrieval` runs the agent on each question (answers are checkpointed in `data/eval_checkpoints/` so a crash/rate limit does not lose work), then computes RAGAS `Faithfulness`, `FactualCorrectness`, `LLMContextPrecisionWithReference`, `LLMContextRecall`, plus a cheap LLM-free `context_hit` (fuzzy match of reference contexts in retrieved chunks) → `data/eval/results.csv`.
 - RAGAS uses the project's own rate-limited Gemini client and embedder through adapters (`src/rag_m2/evaluations/ragas_adapters.py`).
 - `smoke_test` runs a fixed list of conversations (rules, SQL, mixed, multi-turn, small talk) and checks the routing → `data/chat_logs/smoke_test.md` (13/13 routes correct).
+- `eval_sql` evaluates the SQL channel, which RAGAS does not cover: 15 hand-written questions (`data/eval/sql_questions.jsonl`) whose answers were checked directly in `wahadb.sqlite` (stats, points, weapon profiles, stratagems, abilities, leader rules, counts). For each question it records whether the route is `sql`/`both`, whether the expected values are in the SQL result (`sql_ok`) and in the final answer (`answer_ok`) → `data/eval/sql_results.csv`.
+
+### SQL channel results (15 hand-written questions, top-k = 8)
+
+| Route `sql`/`both` | Expected values in SQL result | **Correct final answer** |
+|---:|---:|---:|
+| 14/15 (0.93) | 14/15 (0.93) | **15/15 (1.00)** |
+
+The only "miss" is *"How many CP does Rapid Ingress cost and in which phase?"*: Rapid Ingress is a core stratagem described in the rules book, so the router sent it to the rules channel, which answered correctly (and more precisely: *end of your opponent's Movement phase*). Every other question was answered from a correct SQL query.
 
 ### Results (rules channel, `gemini-3.5-flash-lite`, 12 RAGAS questions)
 
